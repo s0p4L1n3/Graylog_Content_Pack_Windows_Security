@@ -1,1 +1,2 @@
-# Graylog_Content_Pack_Windows_Workstation_Security
+# Graylog Content Pack for Windows Security
+
