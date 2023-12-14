@@ -19,11 +19,20 @@ This content pack contains configuration for Windows 10 Security Events, for Win
 
 ## Not included
 
+You need to download manually the CSV. 
+
 - [macaddress.csv](macaddress_list.csv)
 - [dhcpv4_opcode.csv](dhcpv4_opcode.csv)
-- 
+- [file_monitoring_permissions.csv](file_monitoring_permissions.csv)
+- [registry.csv](registry.csv)
+- [windows_id.csv](windows_id.csv)
+- [Windows-EventID-to-EventDescription.csv](Windows-EventID-to-EventDescription.csv)
 
-Add it to your Graylog server in /srv or if different location, modify the content_pack.json to change location path.
+Add it to your Graylog server in /srv.
+If different location, modify the content_pack.json to change location path (CTRL + F and replace all occurences with the desired path)
+If you do not add it, some Dashboards will not display all infos.
+
+
 
 ## Mandatory Requirements
 * Graylog 5.2.0 
