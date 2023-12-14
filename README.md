@@ -84,8 +84,19 @@ I've made some Dashboard based on Server names to filter in or out some event lo
 
     - `srvdfs1` --> on my test prod, I have a DFS Server hosting SAMBA Share, so I created a Dashboard to monitor files event for this server, if you don't have one you can ignore and delete the dashboard tab on the Web UI.
     - `Europe/Paris` --> on my test prod, I'm in France so the Timezone is this one, if you are from another timezone, replace with the desired one
-   
-  
+
+## Create Index for each stream
+
+By default, the Content Pack can't embeed Index, I recommand you to create one in order to separate Filebeat and Winlogbeat and so on.
+I don't think you want to have all data in the same index. It is like eating all the meal ingredient at the same time, it's difficult to recognize the taste of each.
+
+<img width="1292" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/269618e7-28aa-432f-bc5e-cdd7131db466">
+
+And change the Index for the Winlogbeat stream.
+
+![index_winlogbeat](https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/53f01354-7c5d-44d4-9dca-ed12fb5add85)
+
+Repeat the process for Filebeat.
 
 ## Screenshots
 
