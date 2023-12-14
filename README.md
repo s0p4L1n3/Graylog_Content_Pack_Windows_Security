@@ -43,8 +43,8 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 
 ## Agents Configuration
 
-Be careful, Graylog Sidecar 1.5.0 embedd two bad binary version of Filebeat and Winlogbeat which are 8.9.0, OpenSearch is not compatible ! The latest compatible version is 7.12.1.
-Replace the two binary with the 7.12.1:
+Be careful, by default Graylog Sidecar 1.5.0 embedd two bad binary version of Filebeat and Winlogbeat which are 8.9.0 and OpenSearch 2.X is not compatible ! The latest compatible version is 7.12.1.
+Replace the two binary with the 7.12.1 version.
 
 [Download filebeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-oss-7.12.1-windows-x86_64.zip)
 
