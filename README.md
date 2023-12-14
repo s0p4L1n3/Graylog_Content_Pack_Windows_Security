@@ -30,7 +30,8 @@ You need to download manually the CSV.
 
 Add it to your Graylog server in /srv.
 If different location, modify the content_pack.json to change location path (CTRL + F and replace all occurences with the desired path)
-If you do not add it, some Dashboards will not display all infos.
+
+If you do not add it, some Dashboards will not display all infos, these CSV are used for Lookup Table to enrich data.
 
 
 
