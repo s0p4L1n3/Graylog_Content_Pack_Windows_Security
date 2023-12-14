@@ -1,0 +1,15 @@
+server_url: "https://graylog.lab.lan/api"
+server_api_token: "paste_your_api_token_here"
+node_id: "file:C:\\Program Files\\Graylog\\sidecar\\node-id"
+node_name: ""
+update_interval: 10
+tls_skip_verify: true
+send_status: true
+tags: 
+  - filebeat-windows-server
+  - winlogbeat-server
+  
+
+collector_binaries_accesslist:
+  - "C:\\Program Files\\Graylog\\sidecar\\winlogbeat.exe"
+  - "C:\\Program Files\\Graylog\\sidecar\\filebeat.exe"
