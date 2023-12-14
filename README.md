@@ -40,6 +40,7 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 * Graylog Sidecar Agent 1.5.0
 * Winlogbeat & Filebeat 7.12.1
 * Winlogbeat Security & Powershell Module
+* Edit Windows-Security-Content-Pack.json before uploading it ! (See requirements)
 
 
 ## Agents Configuration (Requirement)
@@ -69,6 +70,22 @@ Download the module folder on this project and add it to your computer/server.
 
 [Visit](https://www.elastic.co/guide/en/beats/winlogbeat/7.12/winlogbeat-modules.html) for more info
 
+## Edit Windows-Security-Content-Pack.json (Requirement)
+
+I've made some Dashboard based on Server names to filter in or out some event logged. You will need to adjust the filter based on your infrastructure.
+
+- Follow these instructions:
+
+  - Search & replace (use Notepadd for example):
+  
+    - `srv*`  ---> on my test prod, all my servers had Netbios Name starting with srv, so I filtered out on couple Dashboard to separate data from computers versus server
+      - replace with `(name1 OR name2 OR name3)` where nameX is all your servers name
+      - <img width="600" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/d4456e70-11a0-431d-a700-c43a8ea39994">
+
+    - `srvdfs1` --> on my test prod, I have a DFS Server hosting SAMBA Share, so I created a Dashboard to monitor files event for this server, if you don't have one you can ignore and delete the dashboard tab on the Web UI.
+    - `Europe/Paris` --> on my test prod, I'm in France so the Timezone is this one, if you are from another timezone, replace with the desired one
+   
+  
 
 ## Screenshots
 
