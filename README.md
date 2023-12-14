@@ -35,11 +35,25 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 
 
 
-## Mandatory Requirements
-* Graylog 5.2.0 
+## Requirements
+* Graylog 5.2.0
+* Graylog Sidecar Agent 1.5.0
+* Winlogbeat & Filebeat 7.12.1
 
 
 ## Agents Configuration
+
+Be careful, Graylog Sidecar 1.5.0 embedd two bad binary version of Filebeat and Winlogbeat which are 8.9.0, OpenSearch is not compatible ! The latest compatible version is 7.12.1.
+Replace the two binary with the 7.12.1:
+
+[Download filebeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-oss-7.12.1-windows-x86_64.zip)
+
+[Download winlogbeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-oss-7.12.1-windows-x86_64.zip)
+
+
+## Create your Graylog Sidecar token API
+
+Follow [this](https://go2docs.graylog.org/5-0/getting_in_log_data/graylog_sidecar.html) Graylog guide if you don't know how.
 
 
 
