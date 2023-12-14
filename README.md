@@ -36,12 +36,13 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 
 ## Requirements
 * Graylog 5.2.0
+* Sidecar API Token Created
 * Graylog Sidecar Agent 1.5.0
 * Winlogbeat & Filebeat 7.12.1
 * Winlogbeat Security & Powershell Module
 
 
-## Agents Configuration
+## Agents Configuration (Requirement)
 
 Be careful, by default Graylog Sidecar 1.5.0 embedd two bad binary version of Filebeat and Winlogbeat which are 8.9.0 and OpenSearch 2.X is not compatible ! The latest compatible version is 7.12.1.
 Replace the two binary with the 7.12.1 version.
@@ -51,12 +52,12 @@ Replace the two binary with the 7.12.1 version.
 [Download winlogbeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-oss-7.12.1-windows-x86_64.zip)
 
 
-## Create your Graylog Sidecar token API
+## Create your Graylog Sidecar token API (Requirement)
 
 You will need to generate an API Token for your Sidecar agent to be able to communicate with Graylog.
 Follow [this](https://go2docs.graylog.org/5-0/getting_in_log_data/graylog_sidecar.html) Graylog guide if you don't know how.
 
-## Add the Winlogbeat modules to your Sidecar folder agent.
+## Add the Winlogbeat modules to your Sidecar folder agent. (Requirement)
 
 By default, Graylog Sidecar does not embedd the Winlogbeat modules
 ```
@@ -64,7 +65,9 @@ C:\Program Files\Graylog\sidecar\module
 ```
 <img width="495" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/7b845b49-85f5-48a2-a152-2d0c3f5e555e">
 
+Download the module folder on this project and add it to your computer/server.
 
+[Visit](https://www.elastic.co/guide/en/beats/winlogbeat/7.12/winlogbeat-modules.html) for more info
 
 
 ## Screenshots
