@@ -21,7 +21,7 @@ This content pack contains configuration for Windows 10 Security Events, for Win
 
 You need to download manually the CSV. 
 
-- [macaddress.csv](macaddress_list.csv)
+- [macaddress.csv](csv/macaddress_list.csv)
 - [dhcpv4_opcode.csv](dhcpv4_opcode.csv)
 - [file_monitoring_permissions.csv](file_monitoring_permissions.csv)
 - [registry.csv](registry.csv)
