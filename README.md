@@ -39,6 +39,8 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 * Graylog 5.2.0 
 
 
+## Agents Configuration
+
 
 
 ## Screenshots
