@@ -34,7 +34,6 @@ If different location, modify the content_pack.json to change location path (CTR
 If you do not add it, some Dashboards will not display all infos, these CSV are used for Lookup Table to enrich data.
 
 
-
 ## Requirements
 * Graylog 5.2.0
 * Graylog Sidecar Agent 1.5.0
@@ -56,12 +55,13 @@ Replace the two binary with the 7.12.1:
 
 Follow [this](https://go2docs.graylog.org/5-0/getting_in_log_data/graylog_sidecar.html) Graylog guide if you don't know how.
 
-## Add the Winlogbeat Module to your Sidecar folder agent.
+## Add the Winlogbeat modules to your Sidecar folder agent.
 
+By default, Graylog Sidecar does not embedd the Winlogbeat modules
 ```
 C:\Program Files\Graylog\sidecar\module
 ```
-<img width="295" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/7b845b49-85f5-48a2-a152-2d0c3f5e555e">
+<img width="395" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/7b845b49-85f5-48a2-a152-2d0c3f5e555e">
 
 
 
