@@ -61,7 +61,7 @@ By default, Graylog Sidecar does not embedd the Winlogbeat modules
 ```
 C:\Program Files\Graylog\sidecar\module
 ```
-<img width="395" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/7b845b49-85f5-48a2-a152-2d0c3f5e555e">
+<img width="495" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/7b845b49-85f5-48a2-a152-2d0c3f5e555e">
 
 
 
