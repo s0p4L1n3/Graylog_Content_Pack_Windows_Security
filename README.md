@@ -78,14 +78,17 @@ I've made some Dashboard based on Server names to filter in or out some event lo
 
   - Search & replace (use Notepadd for example):
   
-    - `srv*`  ---> on my test prod, all my servers had Netbios Name starting with srv, so I filtered out on couple Dashboard to separate data from computers versus server
+    - `srv*`  ---> this filter means all Netbios name starting with srv (eg: srvdfs, srvad1, etc), I use it to show only computers data on dashboard by using NOT conditions, you should replace this filter with either the name of all of your servers or another field key which is easier to implement and that identify all servers.
       - replace with `(name1 OR name2 OR name3)` where nameX is all your servers name
       - <img width="600" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/d4456e70-11a0-431d-a700-c43a8ea39994">
-    - `(srvad1 OR srvad2)` --> on my test prod, I have 2 AD DC.
-      - replace with `(name1 OR name2 OR name3)` where nameX is all your DC name
+    - `(srvad1 OR srvad2)` --> on my test prod, I have 2 AD DC, I use a filter where I want to show data only from my 2 DC
+      - replace with `(DCname1 OR DCname2 OR DCname3)` where DCnameX is all your DC name
 
     - `srvdfs1` --> on my test prod, I have a DFS Server hosting SAMBA Share, so I created a Dashboard to monitor files event for this server, if you don't have one you can ignore and delete the dashboard tab on the Web UI.
     - `Europe/Paris` --> on my test prod, I'm in France so the Timezone is this one, if you are from another timezone, replace with the desired one
+    - `graylog.lab.lan` --> it is my test domain FQDN, change it according to your server FQDN / IP Address, so that all sidecars are correctly configured to send data to your Graylog Server
+      - ![image](https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/b35ee04f-d87b-4a01-8499-841e36ea825e)
+    
 
 ## Create Index for each stream
 
