@@ -17375,7 +17375,7 @@
         },
         "default_template": {
           "@type": "string",
-          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\noutput.logstash:\n   hosts: [\"192.168.1.1:5044\"]\npath:\n  data: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\\\\cache\\\\filebeat\"}\\data\n  logs: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\"}\\logs\ntags:\n - windows\nfilebeat.inputs:\n- type: log\n  enabled: true\n  paths:\n    - C:\\logs\\log.log\n"
+          "@value": "# Needed for Graylog\nfields_under_root: true\nfields.collector_node_id: ${sidecar.nodeName}\nfields.gl2_source_collector: ${sidecar.nodeId}\n\noutput.logstash:\n   hosts: [\"graylog.lab.lan:5044\"]\npath:\n  data: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\\\\cache\\\\filebeat\"}\\data\n  logs: ${sidecar.spoolDir!\"C:\\\\Program Files\\\\Graylog\\\\sidecar\"}\\logs\ntags:\n - windows\nfilebeat.inputs:\n- type: log\n  enabled: true\n  paths:\n    - C:\\logs\\log.log\n"
         }
       },
       "constraints": [
