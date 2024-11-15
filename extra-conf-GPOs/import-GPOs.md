@@ -111,39 +111,44 @@ Cette catégoie contines les sous catégories qui fournissent les informations s
 | Sous-catégorie | Event ID | Description | Ordinateurs | Serveurs | Controleur de domaine |
 | ----- | ------ | ------ | ------ | ------ | ------ |
 | Auditer la modification de stratégie d'audit |  Surveille les evenements ID (4902, 4907, 4904, 4905) et (4715, 4719, 4817, 4902, 4906, 4907, 4908, 4912, 4904, 4905)  | (Journaux si Succes activé) et (Journaux peut importe si Succes activé)  | Succès | Succès | Succès |
-| Auditer la modification de stratégie d'authentification | Surveille les evenements ID 4670, 4706, 4707, 4716, 4713, 4717, 4718, 4739, 4864, 4865, 4866, 4867 |  | Succès | Succès | Succès |
+| Auditer la modification de stratégie d'authentification | Surveille les evenements ID 4670, 4706, 4707, 4716, 4713, 4717, 4718, 4739, 4864, 4865, 4866, 4867 | Ce paramètre est utile pour suivre les modifications apportées à la confiance et aux privilèges au niveau du domaine et de la forêt qui sont accordés aux comptes d'utilisateurs ou aux groupes.  | Succès | Succès | Succès |
 | Auditer la modification de la stratégie d'autorisation | Surveille les évènements 4703, 4704, 4705, 4670, 4911, 4913| | Succès | Succès | Succès |
-| Auditer la modification de la stratégie de plateforme de filtrage | Surveille les évènements  | | Pas d'audit | Pas d'audit | Pas d'audit |
-| Auditer la modification de la stratégie de niveau règle MPSSVC | Surveille les évènements  | | Succès et Echec | Succès et Echec | Succès et Echec |
-| Auditer d'autres évènement de modification de stratégie | Surveille les évènements  | | Succès et Echec | Succès et Echec | Succès et Echec |
+| Auditer la modification de la stratégie de plateforme de filtrage | ID a surveiller non utile  | Non utile pour la sécurité | Pas d'audit | Pas d'audit | Pas d'audit |
+| Auditer la modification de la stratégie de niveau règle MPSSVC | Surveille les évènements 4944-4954, 4956-4958  | Les modifications apportées aux règles du pare-feu sont importantes pour comprendre l’état de sécurité de l’ordinateur et son degré de protection contre les attaques réseau | Succès et Echec | Succès et Echec | Succès et Echec |
+| Auditer d'autres évènement de modification de stratégie | Surveille les évènements 4714, 4819, 4826, 4909, 4910, 5063-5070, 5447, 6144, 6145 | Permet de connaitre les modification de stratégies de la plateforme filtrage Windows, l'état des maj des paramètres de strategie de sécurité pour les GPO locales, les modification de stratégies d'accès centralisé | Succès et Echec | Succès et Echec | Succès et Echec |
 
 ### **Utilisation de privilège**
 
 | Sous-catégorie | Event ID | Description | Ordinateurs | Serveurs | Controleur de domaine |
 | ----- | ------ | ------ | ------ | ------ | ------ |
-| Auditer l'utilisation de privilèges non sensibles | Surveille les évènements ID 4673, 4674 et 4985  | -----  | Succès et Echec | Succès et Echec | Succès et Echec |
-| Auditer d'autre évènements d'utilisation de privilèges | Pas d'infos sur les evenemnt ID  |  | Pas d'audit | Pas d'audit | Pas d'audit |
-| Auditer l'utilisation de privilèges sensibles | Surveille les évènements | | Succès et Echec | Succès et Echec | Succès et Echec |
+| Auditer l'utilisation de privilèges non sensibles | Surveille les évènements ID 4673, 4674 et 4985  | Microsoft ne recommande pas d'activer pour les privilege non sensible car le volume d'évènement est très élevé et ils ne sont pas aussi important que les evenement des privilèges sensible.  | Succès et Echec | Succès et Echec | Succès et Echec |
+| Auditer d'autre évènements d'utilisation de privilèges | ID 4985  |  Cette catégorie de journalise aucun évènement de sécurité et n'est pas utile selon microsoft | Pas d'audit | Pas d'audit | Pas d'audit |
+| Auditer l'utilisation de privilèges sensibles | Surveille les évènements 4673, 4674, 4985 | Cette partie est la plus utile et doit être activée | Succès et Echec | Succès et Echec | Succès et Echec |
 
 
 ### **Système**
 
 | Sous-catégorie | Event ID | Description | Ordinateurs | Serveurs | Controleur de domaine |
 | ----- | ------ | ------ | ------ | ------ | ------ |
-| Auditer le pilote IPSec | Pas d'évènement ID  | -----  | Pas d'audit | Pas d'audit | Pas d'audit |
-| Auditer d'autre évènements système | Pas d'infos sur les evenemnt ID  |  | Succès et Echec | Succès et Echec | Succès et Echec |
-| Auditer la modification de l'état de la sécurité | Surveille les évènements | | Succès | Succès | Succès |
-| Auditer l'extension du système de sécurité | Surveille les évènements | | Succès | Succès | Succès |
-| Auditer l'intégrité du système | Surveille les évènements | | Succès | Succès | Succès |
+| Auditer le pilote IPSec | Pas d'évènement ID  | Non utile car IP Sec n'est pas utilisé sur Windows  | Pas d'audit | Pas d'audit | Pas d'audit |
+| Auditer d'autre évènements système | Surveilles les évènements 5024,5025, 5027-5030, 5032-5035, 5037, 5058,5059, 6400-6409 | Auditer d’autres événements système détermine si le système d’exploitation audite divers événements système (démarrage/arret du service/pilote pare-feu Windows) | Succès et Echec | Succès et Echec | Succès et Echec |
+| Auditer la modification de l'état de la sécurité | Surveille les évènements 4608, 4616, 4621 | L'audit des modifications de l'état de sécurité contient les événements de démarrage, de récupération et d'arrêt de Windows, ainsi que des informations sur les modifications de l'heure système. | Succès | Succès | Succès |
+| Auditer l'extension du système de sécurité | Surveille les évènements 4610,4611,4614,4622,4697 | | Succès | Succès | Succès |
+| Auditer l'intégrité du système | Surveille les évènements 4612, 4615, 4618, 4816, 5038, 5056, 5062, 5057, 5060, 5061, 6281, 6410  | L'intégrité du système d'audit détermine si le système d'exploitation audite les événements qui violent l'intégrité du sous-système de sécurité. | Succès et Echec | Succès et Echec | Succès et Echec |
+
+### Autre Evenements
+
+| Sous-catégorie | Event ID | Description | Ordinateurs | Serveurs | Controleur de domaine |
+| ----- | ------ | ------ | ------ | ------ | ------ |
+| Autre Evenements | Surveilles les évènements 1100, 1102, 1104, 1105, 1108  | NLes événements de cette section sont générés automatiquement et sont activés par défaut.  | Actif par défaut | Actif par défaut | Actif par défaut |
 
 ### **Audit de l'accès global aux objets**
 
 Non configuré.
 
-
 ## Augmentation taille journaux
 
-Pour certaine fichiers journaux, nous augmentons la taille de ceux-ci:
+Pour certain fichiers journaux, nous augmentons la taille de ceux-ci:
 
 Le chemin de configuration se trouve: `Stratégies > Modèles d'administration > Composants windows > Service Journal des évènements`
 
