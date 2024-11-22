@@ -158,13 +158,60 @@ Les journaux cibles sont:
 - Installation: 102400
 - Sécurité: 1048576
 - Système: 102400
-- Windows PowerShell: 102400
+
+## Pour activer la journalisation PowerShell:
+
+Les chemins de configuration se trouve `Stratégies > Modèles d'administration > Composants windows > Windows Powershell >` 
+
+Activer la journalisation de blocs de scripts PowerShell > Cocher Consigner les evenements [...]`
+Activer l'enregistrement des modules > Cliquer sur Afficher et entrez '*'
+
+Attention avec l'activation de la journalisation PowerShell, les informations journalisées par ce biais devraient être considérées comme sensibles dans la mesure où des scripts PowerShell exécutés sur les systèmes peuvent contenir des informations sensibles. Il convient dans ce cas de modifier le descripteur de sécurité du journal Microsoft-Windows-PowerShell/Operational pour empêcher sa lecture par tout le monde.
+
+```
+$Path = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-PowerShell/Operational'
+$Sddl = ((wevutil gl security) -like ’channelAccess*’).Split(' ')[1]
+Set-ItemProperty $Path -Name ChannelAccess -Value $Sddl
+```
+OR 
+```
+# Définir le chemin du canal dans le registre
+$Path = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-PowerShell/Operational'
+
+# Récupérer les propriétés du canal, notamment la sécurité
+$SecurityInfo = wevtutil gl Microsoft-Windows-PowerShell/Operational
+
+# Extraire la ligne contenant les autorisations (channelAccess)
+$Sddl = ($SecurityInfo -match 'channelAccess.*').Split('=')[1].Trim()
+
+# Vérifier si $Sddl contient une valeur valide
+if (-not [string]::IsNullOrWhiteSpace($Sddl)) {
+    # Modifier la clé de registre pour appliquer les nouvelles autorisations
+    Set-ItemProperty -Path $Path -Name ChannelAccess -Value $Sddl
+    Write-Output "Les autorisations ont été mises à jour avec succès."
+} else {
+    Write-Output "Erreur : Impossible d'extraire les autorisations SDDL."
+}
+```
+
+## Pour activer la journalisation de ligne de commande de création de processus:
+
+`Configuration Ordinateur > Stratégies > Modèles d'administration > Système > Auditer la création
+de processus > Inclure la ligne de commande dans les événements de création de processus`
+
+Attention, la journalisation des lignes de commande de création de nouveaux processus peut parfois journaliser des informations sensibles. C’est le cas par exemple lorsque les administrateurs exécutent des commandes contenant des mots de passe en clair : en cas d’élévation locale de privilèges, un attaquant gagnant l’accès en lecture au journal de sécurité pourrait ainsi trouver dans les évènements 4688 des informations
+lui permettant de réaliser des élévations de privilèges sur le SI. La journalisation des lignes de commande de création de nouveaux processus ne doit donc être activée qu’en cas de certitude que cette mauvaise pratique n’a pas cours et après évaluation du risque.
 
 ### 2.2.4 Activation de certains journaux désactivé par défaut
+
+Vous pouvez vous baser sur le script de l'ANSSI: https://github.com/ANSSI-FR/guide-journalisation-microsoft/blob/main/Configure-Channel.ps1
 
 Les chemins d'accès regedit sont:
 
 `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\`
+
+Exemple: La journalisation DNS Client est désactivé par defaut:
+![image](https://github.com/user-attachments/assets/f55115f1-d948-4b66-bcab-e374673ebe2e)
 
 
 Nous activons via GPO certains journaux avec un paramètre regedit a Enabled =1 :
