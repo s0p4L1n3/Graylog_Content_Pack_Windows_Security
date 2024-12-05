@@ -201,6 +201,14 @@ if (-not [string]::IsNullOrWhiteSpace($Sddl)) {
 Attention, la journalisation des lignes de commande de création de nouveaux processus peut parfois journaliser des informations sensibles. C’est le cas par exemple lorsque les administrateurs exécutent des commandes contenant des mots de passe en clair : en cas d’élévation locale de privilèges, un attaquant gagnant l’accès en lecture au journal de sécurité pourrait ainsi trouver dans les évènements 4688 des informations
 lui permettant de réaliser des élévations de privilèges sur le SI. La journalisation des lignes de commande de création de nouveaux processus ne doit donc être activée qu’en cas de certitude que cette mauvaise pratique n’a pas cours et après évaluation du risque.
 
+## Pour activer l'audit NTLM:
+
+`Configuration Ordinateur > Stratégies > Paramètres Windows  > Paramètres de sécurité > Stratégies locales > Options de sécurité`
+
+Activer `Sécurité réseau: Restreindre NTLM: Auditer l'authentification NTLM dans ce domaine` > Activer tout
+Activer `Sécurité réseau: Restreindre NTLM: Auditer le trafic NTLM entrant` > Activer l'audit pour tous les comptes
+
+
 ### 2.2.4 Activation de certains journaux désactivé par défaut
 
 Vous pouvez vous baser sur le script de l'ANSSI: https://github.com/ANSSI-FR/guide-journalisation-microsoft/blob/main/Configure-Channel.ps1
