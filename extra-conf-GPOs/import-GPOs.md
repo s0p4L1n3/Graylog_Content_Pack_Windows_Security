@@ -196,8 +196,7 @@ if (-not [string]::IsNullOrWhiteSpace($Sddl)) {
 
 ## Pour activer la journalisation de ligne de commande de création de processus:
 
-`Configuration Ordinateur > Stratégies > Modèles d'administration > Système > Auditer la création
-de processus > Inclure la ligne de commande dans les événements de création de processus`
+`Configuration Ordinateur > Stratégies > Modèles d'administration > Système > Audit de création de processus > Inclure la ligne de commande dans les événements de création de processus`
 
 Attention, la journalisation des lignes de commande de création de nouveaux processus peut parfois journaliser des informations sensibles. C’est le cas par exemple lorsque les administrateurs exécutent des commandes contenant des mots de passe en clair : en cas d’élévation locale de privilèges, un attaquant gagnant l’accès en lecture au journal de sécurité pourrait ainsi trouver dans les évènements 4688 des informations
 lui permettant de réaliser des élévations de privilèges sur le SI. La journalisation des lignes de commande de création de nouveaux processus ne doit donc être activée qu’en cas de certitude que cette mauvaise pratique n’a pas cours et après évaluation du risque.
