@@ -35,40 +35,29 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 
 
 ## Requirements
-* Graylog 5.2.0
-* Sidecar API Token Created
-* Graylog Sidecar Agent 1.5.0
-* Winlogbeat & Filebeat 7.12.1
-* Winlogbeat Security & Powershell Module
+* Graylog 6.2.X
+* Winlogbeat & Filebeat 7.17.27 (Latest version at the time of writing)
 * Edit Windows-Security-Content-Pack.json before uploading it ! (See requirements)
 
 
 ## Agents Configuration (Requirement)
 
-Be careful, by default Graylog Sidecar 1.5.0 embedd two bad binary version of Filebeat and Winlogbeat which are 8.9.0 and OpenSearch 2.X is not compatible ! The latest compatible version is 7.12.1.
-Replace the two binary with the 7.12.1 version.
+I'm still using the 7.X version of Beats agents as there is some change since the 8 versions (like modules not loaded anymore by the agents)
 
-[Download filebeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-oss-7.12.1-windows-x86_64.zip)
-
-[Download winlogbeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-oss-7.12.1-windows-x86_64.zip)
+Winlogbeat Security & Powershell Module are included in non-oss Beats archive.
 
 
-## Create your Graylog Sidecar token API (Requirement)
+- Filebeat
+[Download filebeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.27-windows-x86_64.zip)
+Extract the archive and add it to your server/workstation: `C:\Program Files (x86)\filebeat\7.17.27`, replace the filebeat.yml with this one:  LINK OF FILEBEAT.YML
 
-You will need to generate an API Token for your Sidecar agent to be able to communicate with Graylog.
-Follow [this](https://go2docs.graylog.org/5-0/getting_in_log_data/graylog_sidecar.html) Graylog guide if you don't know how.
+- Winlogbeat
+[Download winlogbeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-7.17.27-windows-x86_64.zip)
 
-## Add the Winlogbeat modules to your Sidecar folder agent. (Requirement)
+Extract the archive and add it to your server/workstation: `C:\Program Files (x86)\winlogbeat\7.17.27`, replace the winlogbeat.yml with this one:  LINK OF WINLOGBEAT.YML
 
-By default, Graylog Sidecar does not embedd the Winlogbeat modules
-```
-C:\Program Files\Graylog\sidecar\module
-```
-<img width="495" alt="image" src="https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/assets/126569468/7b845b49-85f5-48a2-a152-2d0c3f5e555e">
 
-Download the module folder on this project and add it to your computer/server.
 
-[Visit](https://www.elastic.co/guide/en/beats/winlogbeat/7.12/winlogbeat-modules.html) for more info
 
 ## Edit Windows-Security-Content-Pack.json (Requirement)
 
@@ -84,7 +73,7 @@ I've made some Dashboard based on Server names to filter in or out some event lo
     - `(srvad1 OR srvad2)` --> on my test prod, I have 2 AD DC, I use a filter where I want to show data only from my 2 DC
       - replace the strings `(srvad1 OR srvad2)` by `(DCname1 OR DCname2 OR DCname3)` where DCnameX is all your DC name
 
-    - `srvdfs1` --> on my test prod, I have a DFS Server hosting SAMBA Share, so I created a Dashboard to monitor files event for this server, if you don't have one you can ignore and delete the dashboard tab on the Web UI.
+    - `srvdfs1` --> on my test prod, I have a DFS Server hosting SMB Share, so I created a Dashboard to monitor files event for this server, if you don't have one you can ignore and delete the dashboard tab on the Web UI.
        - replace the string `srvdfs1` by `yourdfsname` if you have one
     - `Europe/Paris` --> on my test prod, I'm in France so the Timezone is this one, if you are from another timezone, replace with the desired one
        - replace the string `Europe/Paris` by `Country/Town` timezone of your choice
