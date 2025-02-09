@@ -24,6 +24,73 @@ filebeat.inputs:
   - add_tags:
       tags: dnsserver
       
+      
+- type: filestream
+  id: pfirewall_domain
+  enabled: true
+  paths:
+    - "C:/Windows/System32/LogFiles/Firewall/pfirewall_domain.log"
+  exclude_lines:
+    - '\s\bff02::.*?\s\bRECEIVE\b'
+    - '\s\b5353\b\s\b5353\b\s.*?\s\bRECEIVE\b'
+    - '\s\b(80|443)\b\s.*?\s\bSEND\b'
+    - '\s\bDROP\b\s\b(TCP|UDP|ICMP)\b\s\b(10\.16\.1\.1|10\.16\.1\.128)\b\s.*?\s\bRECEIVE\b'
+  encoding: utf8
+  close_inactive: 1m
+  ignore_older: 2m
+  clean_inactive: 24h
+  tags: ["filebeat-windows-firewall-domain"]
+  processors:
+    - drop_event.when.or:
+        - regexp.message: '\s\bff02::.*?\s\bRECEIVE\b'
+        - regexp.message: '\s\b5353\b\s\b5353\b\s.*?\s\bRECEIVE\b'
+        - regexp.message: '\s\b(80|443)\b\s.*?\s\bSEND\b'
+        - regexp.message: '\s\bDROP\b\s\b(TCP|UDP|ICMP)\b\s\b(10\.16\.1\.1|10\.16\.1\.128)\b\s.*?\s\bRECEIVE\b'
+
+- type: filestream
+  id: pfirewall_private
+  enabled: true
+  paths:
+    - "C:/Windows/System32/LogFiles/Firewall/pfirewall_private.log"
+  exclude_lines:
+    - '\s\bff02::.*?\s\bRECEIVE\b'
+    - '\s\b5353\b\s\b5353\b\s.*?\s\bRECEIVE\b'
+    - '\s\b(80|443)\b\s.*?\s\bSEND\b'
+    - '\s\bDROP\b\s\b(TCP|UDP|ICMP)\b\s\b(10\.16\.1\.1|10\.16\.1\.128)\b\s.*?\s\bRECEIVE\b'
+  encoding: utf8
+  close_inactive: 1m
+  ignore_older: 2m
+  clean_inactive: 24h
+  tags: ["filebeat-windows-firewall-private"]
+  processors:
+    - drop_event.when.or:
+        - regexp.message: '\s\bff02::.*?\s\bRECEIVE\b'
+        - regexp.message: '\s\b5353\b\s\b5353\b\s.*?\s\bRECEIVE\b'
+        - regexp.message: '\s\b(80|443)\b\s.*?\s\bSEND\b'
+        - regexp.message: '\s\bDROP\b\s\b(TCP|UDP|ICMP)\b\s\b(10\.16\.1\.1|10\.16\.1\.128)\b\s.*?\s\bRECEIVE\b'
+
+- type: filestream
+  id: pfirewall_public
+  enabled: true
+  paths:
+    - "C:/Windows/System32/LogFiles/Firewall/pfirewall_public.log"
+  exclude_lines:
+    - '\s\bff02::.*?\s\bRECEIVE\b'
+    - '\s\b5353\b\s\b5353\b\s.*?\s\bRECEIVE\b'
+    - '\s\b(80|443)\b\s.*?\s\bSEND\b'
+    - '\s\bDROP\b\s\b(TCP|UDP|ICMP)\b\s\b(10\.16\.1\.1|10\.16\.1\.128)\b\s.*?\s\bRECEIVE\b'
+  encoding: utf8
+  close_inactive: 1m
+  ignore_older: 2m
+  clean_inactive: 24h
+  tags: ["filebeat-windows-firewall-public"]
+  processors:
+    - drop_event.when.or:
+        - regexp.message: '\s\bff02::.*?\s\bRECEIVE\b'
+        - regexp.message: '\s\b5353\b\s\b5353\b\s.*?\s\bRECEIVE\b'
+        - regexp.message: '\s\b(80|443)\b\s.*?\s\bSEND\b'
+        - regexp.message: '\s\bDROP\b\s\b(TCP|UDP|ICMP)\b\s\b(10\.16\.1\.1|10\.16\.1\.128)\b\s.*?\s\bRECEIVE\b'
+      
 # ============================== Filebeat modules ==============================
 
 filebeat.config.modules:
