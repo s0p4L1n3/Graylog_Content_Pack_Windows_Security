@@ -51,6 +51,10 @@ Winlogbeat Security & Powershell Module are included in non-oss Beats archive.
 [Download filebeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.27-windows-x86_64.zip)
 Extract the archive and add it to your server/workstation: `C:\Program Files (x86)\filebeat\7.17.27`, replace the filebeat.yml with this one:  LINK OF FILEBEAT.YML
 
+#### Enable DNS Advanced Audit on your DC:
+![image](https://github.com/user-attachments/assets/ace5ec5c-8303-45de-be9a-7bbd9c1efdc6)
+
+
 - Winlogbeat
 [Download winlogbeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-7.17.27-windows-x86_64.zip)
 
