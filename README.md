@@ -55,7 +55,7 @@ Extract the archive and add it to your server/workstation: `C:\Program Files (x8
 - Winlogbeat
 [Download winlogbeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/winlogbeat/winlogbeat-7.17.27-windows-x86_64.zip)
 
-Extract the archive and add it to your server/workstation: `C:\Program Files (x86)\winlogbeat\7.17.27`, replace the winlogbeat.yml with this one:  LINK OF WINLOGBEAT.YML
+Extract the archive and add it to your server/workstation: `C:\Program Files (x86)\winlogbeat\7.17.27`, replace the winlogbeat.yml with this one:  [winlogbeat.yml](https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/blob/main/beats_config/winlogbeat_v7.yml)
 
 
 
