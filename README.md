@@ -1,8 +1,8 @@
 # Windows Security Content Pack for Graylog
 
-Tested with Winlogbeat & Filebeat 7.17.27 / Windows 2022 / Windows 11 / Graylog 6.2.5
+Tested with Winlogbeat & Filebeat 7.17.27 / Windows 2022 / Windows 11 / Graylog 6.1.5
 
-The Content Pack should be compatible with all Graylog 6.2.X version. 
+The Content Pack should be compatible with all Graylog 6.1.X version. 
 This content pack contains configuration for Windows 10/11 Security Events, for Windows Server 2022 Security Event, For Active Directory, For Windows DNS & DHCP Server, for DFS Server.
 
 **Note this was built using filebeat and Winlogbeat as the log exporter. No inputs extractor were used, only pipeline rules.**
@@ -35,7 +35,7 @@ If you do not add it, some Dashboards will not display all infos, these CSV are 
 
 
 ## Requirements
-* Graylog 6.2.X
+* Graylog 6.1.X
 * Winlogbeat & Filebeat 7.17.27 (Latest version at the time of writing)
 * Edit Windows-Security-Content-Pack.json before uploading it ! (See requirements)
 
