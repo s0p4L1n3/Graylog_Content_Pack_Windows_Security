@@ -1,9 +1,9 @@
 # Windows Security Content Pack for Graylog
 
-Tested with Winlogbeat & Filebeat 7.12.1.0 / Windows 2022 / Windows 10 / Graylog 5.2.2
+Tested with Winlogbeat & Filebeat 7.17.27 / Windows 2022 / Windows 11 / Graylog 6.2.5
 
-The Content Pack should be compatible with all Graylog 5.2.X version. 
-This content pack contains configuration for Windows 10 Security Events, for Windows Server 2022 Security Event, For Active Directory, For Windows DNS & DHCP Server, for DFS Server.
+The Content Pack should be compatible with all Graylog 6.2.X version. 
+This content pack contains configuration for Windows 10/11 Security Events, for Windows Server 2022 Security Event, For Active Directory, For Windows DNS & DHCP Server, for DFS Server.
 
 **Note this was built using filebeat and Winlogbeat as the log exporter. No inputs extractor were used, only pipeline rules.**
 
