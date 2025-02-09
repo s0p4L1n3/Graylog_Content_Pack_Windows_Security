@@ -1,0 +1,53 @@
+filebeat.inputs:
+
+- type: filestream
+  id: dhcpserver
+  enabled: true
+  encoding: utf-8
+  paths:
+    - "C:/Windows/System32/dhcp/DhcpSrvLog-*.log"
+  include_lines: ["^[0-9]{2},"]
+  fields_under_root: true
+  processors:
+  - add_tags:
+      tags: dhcpserver
+
+- type: filestream
+  id: dnsserver
+  enabled: true
+  paths:
+    - "C:/Windows/Logs/DNS/Dns.log"
+  multiline.pattern: ^=[A-Z]+|^$
+  multiline.negate: true
+  multiline.match: before
+  processors:
+  - add_tags:
+      tags: dnsserver
+      
+# ============================== Filebeat modules ==============================
+
+filebeat.config.modules:
+  # Glob pattern for configuration loading
+  path: ${path.config}/modules.d/*.yml
+
+  # Set to true to enable config reloading
+  reload.enabled: false
+
+  # Period on which files under path should be checked for changes
+  #reload.period: 10s
+
+
+# ------------------------------ Logstash Output -------------------------------
+  
+output.logstash:
+   hosts: ["graylog.sopaline.lan:5044"]
+   
+   
+ # ================================== Logging ===================================
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: C:\Program Files (x86)\filebeat\7.17.27\Logs
+  name: filebeat
+logging.files.rotateeverybytes: 209715200
