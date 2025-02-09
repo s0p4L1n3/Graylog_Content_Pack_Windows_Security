@@ -49,6 +49,7 @@ Winlogbeat Security & Powershell Module are included in non-oss Beats archive.
 
 - Filebeat
 [Download filebeat archive and extract .exe](https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.27-windows-x86_64.zip)
+
 Extract the archive and add it to your server/workstation: `C:\Program Files (x86)\filebeat\7.17.27`, replace the filebeat.yml with this one:  LINK OF FILEBEAT.YML
 
 - Winlogbeat
