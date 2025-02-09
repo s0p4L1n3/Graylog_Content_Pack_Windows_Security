@@ -15,7 +15,13 @@ This content pack contains configuration for Windows 10/11 Security Events, for 
 * Stream (Filebeat & Winlogbeat)
 * Pipeline Rules w/  stages 
 * Lookup table + Data adapter + data cache
-* Dashboards 
+* Dashboards
+
+## WORK IN PROGRESS
+
+Adding SYSMON/MITRE&ATTACK framework
+Adding SIGMA RULES
+Alerting & Detection rules
 
 ## Not included
 
