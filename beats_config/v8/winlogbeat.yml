@@ -1,0 +1,737 @@
+winlogbeat.event_logs:
+     
+#FileSystem Monitor
+   - name: Security
+     id: filesystem
+     event_id: 4656, 4663, 4670, 4907, 5140, 5142-5145
+     ignore_older: 24h
+     tags: [filesystem]
+     processors:
+       - drop_event.when.not.or:
+           - equals.winlog.event_data.ObjectType: "File"
+       - drop_event.when.or:
+           - regexp.winlog.event_data.winlog_task: 'Authorization Policy Change'
+           - regexp.winlog.event_data.winlog_task: 'Audit Policy Change'
+           - equals.winlog.event_data.winlog_task: "Registry"
+           - equals.winlog.event_data.winlog_task: "Kernel Object"
+           - equals.winlog.event_data.SubjectUserSid: 'S-1-5-18'
+           - equals.winlog.event_data.SubjectUserSid: 'S-1-5-19'
+           
+           #cant see the diff between human/computer action opening a folder, too many logs
+           - regexp.winlog.event_data.AccessList: '^%%4416.*'
+           
+           # dont need to know who read which permission
+           - regexp.winlog.event_data.AccessList: '^%%1538.*'
+           - regexp.winlog.event_data.AccessList: '^%%1539.*'
+           - regexp.winlog.event_data.AccessList: '^%%1542.*'
+           
+           #we dont need to monitor synchronize status event
+           - regexp.winlog.event_data.AccessList: '^%%1541.*'
+           
+           
+           #we do not need to know who read/write extended attribute
+           - regexp.winlog.event_data.AccessList: '^%%4419.*'
+           - regexp.winlog.event_data.AccessList: '^%%4420.*'
+           
+           #computers always executing dll which gives too many logs
+           - regexp.winlog.event_data.AccessList: '^%%4421.*'
+           
+           #too many logs for ReadAttributes event, on everyaction, it reads attribute
+           - regexp.winlog.event_data.AccessList: '^%%4423.*'
+           - regexp.winlog.event_data.AccessList: '^%%4424.*'
+           
+           #dont need to know some activites automated by the system using user permission
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\Windows.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\PenWorkspace.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\CLR_v4.0.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\Internet Explorer\\CacheStorage.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\Windows\\Recent\\AutomaticDestinations.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Packages.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Google\\Chrome\\User Data.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Google\\Chrome\\Application\\SetupMetrics.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\BraveSoftware\\Brave-Browser\\User Data.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\Edge\\User Data.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Mozilla\\Firefox\\Profiles\\[a-zA-Z0-9._~-]+\\cache2.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Temp.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\D3DSCache.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Windows\\ServiceProfiles\\NetworkService\\AppData\\Local\\Microsoft\\Windows\\DeliveryOptimization.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\ProgramData\\NVIDIA Corporation\\Drs.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\ProgramData\\USOShared\\Logs.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Windows\\Logs.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Windows\\System32\\LogFiles.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Local\\Microsoft\\Token\\Cache.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\Roaming\\Microsoft.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Users\\[a-zA-Z0-9._~-]+\\AppData\\LocalLow\\Microsoft\\CryptnetUrlCache.*'
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\Windows\\Temp.*'
+           
+           
+           #dont need to know recycle bin activites, we already have the Delete event (%%1537)
+           - regexp.winlog.event_data.ObjectName: '^(?i)C\:\\\$Recycle.Bin.*'
+
+##### ******* Application Crashes ******** ######
+
+   - name: Application
+     id: appcrashes
+     event_id: 1000, 1002
+     ignore_older: 24h
+     tags: [windowsappscrash]
+     level: error
+     provider:
+       - Application Error
+       - Application Hang
+        
+   - name: Application
+     id: appcrashes2
+     event_id: 1001
+     ignore_older: 24h
+     tags: [windowsappscrash]
+     level: info
+     provider:
+      - Windows Error Reporting
+      
+ ##### ******* Bits ******** ######     
+      
+   - name: Microsoft-Windows-Bits-Client/Operational
+     ignore_older: 24h
+     tags: [windowsbits]
+     processors:
+      - drop_event.when.or:
+        - equals.winlog.event_id: 3
+        - equals.winlog.event_id: 5
+        - equals.winlog.event_id: 61
+        - equals.winlog.event_id: 16403
+      
+##### ******* EMET ******** ######
+   - name: Application
+     id: emet
+     event_id: 1, 2
+     level: warning, error
+     tags: [windowsemet]
+     provider:
+      - EMET
+
+##### ******* Code Integrity ******** ######
+   - name: Microsoft-Windows-CodeIntegrity/Operational
+     event_id: 3001, 3002, 3003, 3004, 3010, 3023
+     ignore_older: 24h
+     tags: [windowscodeintegrity]
+     level: error, warning
+     provider:
+       - Microsoft-Windows-CodeIntegrity
+   - name: Security
+     id: codeintegrity
+     event_id: 5038, 6281, 6410
+     ignore_older: 24h
+     tags: [windowscodeintegrity]
+     level: info
+     provider:
+       - Microsoft-Windows-Security-Auditing
+        
+  ##### ******* Exploit Guard ******** ######      
+   - name: Microsoft-Windows-Windows Defender/Operational
+     id: exploitguard3
+     event_id: 1121, 1122, 5007
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+   - name: Microsoft-Windows-Windows Defender/WHC
+     id: exploitguard4
+     event_id: 1121, 1122, 5007
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+   - name: Microsoft-Windows-Security-Mitigations/KernelMode
+     event_id: 1-9, 11-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+      - Microsoft-Windows-Security-Mitigations
+      - Microsoft-Windows-WER-Diag
+      - Microsoft-Windows-Win32kv
+      - Win32k
+
+   - name: Microsoft-Windows-Win32k/Concurrency
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/Contention
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/Messages
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/Operational
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/Power
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/Render
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/Tracing
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Win32k/UIPI
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: System
+     id: exploitguard
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Security-Mitigations/UserMode
+     event_id: 1-24, 5, 260
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+     provider:
+       - Microsoft-Windows-Security-Mitigations
+       - Microsoft-Windows-WER-Diag
+       - Microsoft-Windows-Win32kv
+       - Win32k
+
+   - name: Microsoft-Windows-Windows Defender/Operational
+     id: exploitguard2
+     event_id: 1125, 1126, 5007
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+
+   - name: Microsoft-Windows-Windows Defender/WHC
+     event_id: 1125, 1126, 5007
+     ignore_older: 24h
+     tags: [windowsexploitguard]
+    
+##### ******* Drivers ******** ######    
+
+   - name: System
+     id: drivers
+     event_id: 219
+     ignore_older: 24h
+     tags: [windowsdrivers]
+     level: warning
+     provider:
+       - Microsoft-Windows-Kernel-PnP
+   - name: Microsoft-Windows-DriverFrameworks-UserMode/Operational
+     event_id: 2004
+     ignore_older: 24h
+     tags: [windowsdrivers]
+
+   - name: System
+     id: drivers2
+     level: critical, error
+     ignore_older: 24h
+     tags: [windowsdrivers]
+     processors:
+      - drop_event.when.or:
+        - equals.winlog.event_id: 7000
+        - equals.winlog.event_id: 7001
+        - equals.winlog.event_id: 10016
+        - equals.winlog.event_id: 24629
+        - equals.winlog.event_id: 10010
+        - equals.winlog.event_id: 11060
+        - equals.winlog.event_id: 41
+        - equals.winlog.event_id: 124
+        - equals.winlog.event_id: 34
+
+##### ******* Windows OS ******** #######
+   - name: Security
+     id: windowsos
+     event_id: 4608, 4610, 4611, 4614, 4622, 4697, 4719, 4817, 4826, 4902, 4904, 4905, 4906, 4908, 4912
+     ignore_older: 48h
+     tags: [windowsos]
+
+   - name: System
+     id: windowsos2
+     event_id: 12, 13, 1074
+     ignore_older: 24h
+     tags: [windowsos]
+     provider: 
+       - Microsoft-Windows-Kernel-General
+       - USER32
+     
+   - name: System
+     id: windowsos3
+     event_id: 16962, 16965, 16968, 16969, 41, 1001, 6008, 4621
+     ignore_older: 24h
+     tags: [windowsos]     
+     
+   - name: Microsoft-Windows-SMBServer/Audit
+     event_id: 3000
+     ignore_older: 24h
+     tags: [windowsos]     
+     provider: 
+       - Microsoft-Windows-SMBServer
+       
+##### ******* Windows USB ******** #######
+   - name: Microsoft-Windows-USB-USBHUB3-Analytic
+     processors:
+       - drop_event.when.not:
+           and:
+           - equals.winlog.event_data.DeviceDescription: "USB Mass Storage Device"
+     event_id: 43
+     ignore_older: 24h
+     tags: [windowsusb]
+     level: information
+     provider: 
+       - Microsoft-Windows-USB-USBHUB3
+     
+   - name: Microsoft-Windows-Kernel-PnP/Configuration
+     processors:
+       - drop_event.when.not:
+           and:
+           - equals.winlog.event_data.DriverName: "&quot;usbstor.inf&quot;" 
+     event_id: 400, 410
+     ignore_older: 24h
+     tags: [windowsusb]
+     level: information
+     provider: 
+       - Microsoft-Windows-Kernel-PnP
+
+     
+   - name: Security
+     id: windowsusb
+     event_id: 6416, 6419-6424
+     ignore_older: 24h
+     tags: [windowsusb]
+     processors:
+      - drop_event.when.or:
+           - regexp.winlog.event_data.DeviceDescription: '^Microsoft Print to PDF.*'
+           - regexp.winlog.event_data.DeviceDescription: '^Microsoft XPS Document Writer.*'
+           - regexp.winlog.event_data.DeviceDescription: '^Generic Non-PnP Monitor.*'
+           
+           
+     
+##### ******* Windows Registry ******** #######
+
+   - name: Security
+     id: windowsregistry
+     event_id: 4657
+     ignore_older: 24h
+     tags: [windowsregistry]
+     processors:
+       - drop_event.when.not:
+           or:
+           - equals.winlog.event_data.OperationType: "%%1904"
+           - equals.winlog.event_data.OperationType: "%%1905"
+           - equals.winlog.event_data.OperationType: "%%1906"
+         #Drop all registry events not critical to monitor
+       - drop_event.when.not.or:
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Group Policy\\Scripts\\Startup.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Group Policy\\Scripts\\Shutdown.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SYSTEM\\CurrentControlSet\\Control\\SafeBoot\\AlternateShell.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Active Setup\\Installed Components.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Active Setup\\Installed Components.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SYSTEM\\CurrentControlSet\\Services.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SharedTaskScheduler.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Explorer\\SharedTaskScheduler.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ShellServiceObjects.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ShellServiceObjects.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ShellServiceObjectDelayLoad.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\ShellServiceObjectDelayLoad.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Drive\\ShellEx\\ContextMenuHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Directory\\ShellEx\\ContextMenuHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Directory\\ShellEx\\DragDropHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Directory\\ShellEx\\CopyHookHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Directory\\Background\\ShellEx\\ContextMenuHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Folder\\ShellEx\\ContextMenuHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Classes\\Folder\\ShellEx\\DragDropHandlers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ShellIconOverlayIdentifiers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ShellIconOverlayIdentifiers.*'
+           - regexp.winlog.event_data.ObjectName: '(?i)^\\REGISTRY\\MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon\\GPExtensions.*'
+           
+
+##### ******* Windows Firewall ******** #######
+
+   - name: Microsoft-Windows-Windows Firewall With Advanced Security/Firewall
+     event_id: 2002, 2004, 2005, 2006, 2009, 2033, 2099, 2097, 2010
+     ignore_older: 24h
+     tags: [windowsfirewall]
+     level: error, info
+     provider:
+       - Microsoft-Windows-Windows Firewall With Advanced Security
+    
+       
+       
+   - name: Security
+     id: windowsfirewall
+     event_id: 4944-4954, 4956-4958, 5024, 5025, 5037, 5027-5030, 5032-5035, 5031, 5150, 5151, 5154-5157, 5159
+     ignore_older: 24h
+     tags: [windowsfirewall]
+     processors:
+      - drop_event.when.or:
+          - regexp.winlog.event_data.DestAddress: '239.255.255.250'
+          - regexp.winlog.event_data.DestAddress: '((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?'
+          - regexp.winlog.event_data.Application: 'dns.exe'
+          
+##### ******* Windows Service ******** #######
+
+   - name: System
+     id: windowsservice
+     event_id: 7022-7024, 7026, 7031, 7032, 7034, 7040, 7045
+     ignore_older: 24h
+     tags: [windowsservice]
+     level: error, info, crit, warn
+     provider:
+       - Service Control Manager
+     processors:
+       - drop_event.when.or:
+           - regexp.winlog.event_data.param1: '^Programme d’installation pour les modules Windows.*'
+           - regexp.winlog.event_data.param1: '^Service de transfert intelligent en arrière-plan.*'
+       
+
+##### ******* Windows EventLog ******** #######
+
+   - name: System
+     id: windowsevtx
+     event_id: 104
+     ignore_older: 24h
+     tags: [windowseventlog]
+     level: info
+     provider:
+       - Microsoft-Windows-Eventlog
+       
+   - name: Security
+     id: windowsevtx2
+     event_id: 1100, 1104, 1105, 1108
+     ignore_older: 24h
+     tags: [windowseventlog]
+     
+   - name: Security
+     id: windowsevtx3
+     event_id: 1102
+     ignore_older: 24h
+     tags: [windowseventlog]
+     level: info
+     provider:
+       - Microsoft-Windows-Eventlog
+
+##### ******* Windows PowerShell ******** #######
+   - name: Windows PowerShell
+     event_id: 400, 403, 600, 800
+     ignore_older: 48h
+     tags: [powershell-legacy]
+     
+   - name: Microsoft-Windows-PowerShell/Operational
+     event_id: 4103, 4105, 4106
+     ignore_older: 48h
+     tags: [powershell]
+     processors:
+      - drop_event.when.or:
+        - equals.winlog.event_id: 4104
+        - equals.winlog.event_id: 4100
+        - equals.winlog.event_id: 32784
+        
+   - name: Microsoft-Windows-PowerShell/Admin
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [powershell]
+      
+   - name: Microsoft-Windows-PowerShell-DesiredStateConfiguration-FileDownloadManager/Operational
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [powershell]
+
+   - name: Microsoft-Windows-Shell-Core/Operational
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [powershell]
+
+   - name: Microsoft-Windows-Shell-Core/LogonTasksChannel
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [powershell]
+
+   - name: Microsoft-Windows-Shell-Core/AppDefaults
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [powershell]
+
+   - name: Microsoft-Windows-Shell-Core/ActionCenter
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [powershell]
+
+   - name: PowerShellCore/Operational
+     level: 'critical, error, warning'
+     ignore_older: 24h
+     tags: [powershell]
+     
+  ##### ******* SSH ******** #######  
+  
+   - name: OpenSSH/Operational
+     level: 'critical, error, warning'
+     ignore_older: 24h
+     tags: [windowsopenssh]
+
+   - name: OpenSSH/Admin
+     level: 'critical, error, warning'
+     ignore_older: 24h
+     tags: [windowsopenssh]
+        
+##### ******* WMI Activity ******** #######  
+
+   - name: Microsoft-Windows-WMI-Activity/Operational
+     #event_id: 5857,5858,5859,5860,5861
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [windowswmi]
+     processors:
+       - drop_event.when.or:
+         - equals.winlog.event_id: 5858
+
+   - name: Microsoft-Windows-TPM-WMI
+     level: 'critical, error'
+     ignore_older: 24h
+     tags: [windowswmi]
+  
+##### ******* Windows Privilege ******** #######
+
+   - name: Security
+     id: windowsprivilege
+     event_id: 4673, 4674, 4985
+     ignore_older: 24h
+     tags: [windowsprivilege]
+     
+##### ******* Windows Process ******** #######
+          
+   - name: Security
+     id: windowsprocess
+     event_id: 4688, 4689
+     ignore_older: 24h
+     tags: [windowsprocess]
+     
+##### ******* Windows Task ******** #######
+
+   - name: Microsoft-Windows-TaskScheduler/Operational
+     event_id: 106, 129, 141, 142, 200, 201
+     ignore_older: 24h
+     tags: [windowstask]
+     provider:
+       - Microsoft-Windows-TaskScheduler
+       
+   - name: Security
+     id: windowstask
+     event_id: 4698-4702
+     ignore_older: 24h
+     tags: [windowstask]
+ 
+ 
+##### ******* DNS Client ******** #######
+
+   - name: Microsoft-Windows-DNS-Client/Operational
+     event_id: 3006, 3008, 3010, 3018
+     ignore_older: 24h
+     tags: [windowsdnsclient]
+     processors:
+       - drop_event.when:
+           or:
+           - equals.winlog.event_data.QueryOptions: "140737488355328"
+           - equals.winlog.event_data.QueryResults: ""
+
+##### ******* Windows RDP ******** #######
+
+   - name: Microsoft-Windows-TerminalServices-RDPClient/Operational
+     ignore_older: 24h
+     tags: [windowsrdp]
+     level: crit, error, info, warn
+     
+   - name: Microsoft-Windows-TerminalServices-LocalSessionManager/Operational
+     ignore_older: 24h
+     tags: [windowsrdp]
+     level: crit, error, info, warn
+     
+   - name: Microsoft-Windows-TerminalServices-ServerUSBDevices/Operational
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+    
+
+   - name: Microsoft-Windows-TerminalServices-ServerUSBDevices/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+     
+   - name: Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-RemoteConnectionManager/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-Printers/Operational
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-Printers/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-PnPDevices/Operational
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-PnPDevices/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-LocalSessionManager/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-ClientUSBDevices/Operational
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-ClientUSBDevices/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-SessionBroker-Client/Admin
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+
+   - name: Microsoft-Windows-TerminalServices-SessionBroker-Client/Operational
+     level: crit, error, info, warn
+     ignore_older: 24h
+     tags: [windowsrdp]
+     
+ ##### ******* GPO Errors ******** #######    
+     
+   - name: System
+     id: windowsgpo
+     event_id: 1085, 1125, 1127, 1129
+     ignore_older: 24h
+     tags: [windowsgpoerrors]
+     level: error
+     provider:
+       - Microsoft-Windows-GroupPolicy
+
+   - name: Security
+     id: windowsgpo2
+     event_id: 6144, 6145
+     ignore_older: 24h
+     tags: [windowsgpoerrors]
+
+##### ******* Account Lockout & Auth ******** #######
+   - name: Security
+     id: accountlockout
+     event_id: 4624-4627, 4634, 4647, 4649, 4672, 4675, 4740, 4774-4779, 4800-4803, 4964, 5378
+     level: info
+     ignore_older: 24h
+     tags: [auth]
+     provider:
+       - Microsoft-Windows-Security-Auditing
+     processors:
+       - drop_event.when:
+           or:
+             - equals.winlog.event_data.TargetUserSid: 'S-1-5-18'
+             - regexp.winlog.event_data.TargetUserName: '.*\$'
+           
+   - name: Security
+     id: accountlockout2
+     event_id: 4768, 4769, 4770, 4771, 4772, 4773
+     ignore_older: 24h
+     tags: [auth]
+    
+       
+##### ******* Windows Defender ******** #######
+
+   - name: Microsoft-Windows-Windows Defender/Operational
+     event_id: 1006-1009, 1116-1119
+     ignore_older: 24h
+     tags: [windowsdefender]
+
+
+
+
+# ------------------------------ Modules -------------------------------
+    
+# ------------------------------ Logstash Output -------------------------------
+output.logstash:
+  # The Logstash hosts
+  hosts: ["graylog.sopaline.lan:5044"]
+
+ # ================================== Logging ===================================
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: C:\Program Files (x86)\winlogbeat\8.17.1\Logs
+  name: winlogbeat
+logging.files.rotateeverybytes: 209715200
+
+
