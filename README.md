@@ -19,8 +19,8 @@ This content pack contains configuration for Windows 10/11 Security Events, for 
 
 ## WORK IN PROGRESS
 
-- Adding SYSMON/MITRE&ATTACK framework
-- Adding SIGMA RULES
+- Adding SYSMON/MITRE&ATTACK framework (winlogbeat through sysmon module)
+- Adding SIGMA RULES (graylog side)
 - Alerting & Detection rules
 
 ## Not included
