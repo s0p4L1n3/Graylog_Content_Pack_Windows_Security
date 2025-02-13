@@ -1,3 +1,5 @@
+### WORKS ONLY FOR WINLOGBEAT 7.X versions, NOT 8.X
+
 winlogbeat.event_logs:
   
   # Account Management
