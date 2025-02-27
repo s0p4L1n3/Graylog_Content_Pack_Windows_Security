@@ -3,6 +3,10 @@
 I've uploaded for you my working GPOs based on French Orgz ANSSI and based on the book written by Andrei Miroshnikov - Windows Security Monitoring - Scenarios and Patterns
 
 Please follow this guide to know how to import my backuped GPOs: [Exporting and Importing Group Policy Object between domains](https://thomascheng.net/2018/07/11/exporting-and-importing-group-policy-object-between-domains/)
+
+https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/tree/main/extra-conf-GPOs/COMPUTER%20-%20Auditing%20Policy
+https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/tree/main/extra-conf-GPOs/DC%20-%20Auditing%20Policy
+
 # Logging GPO
 
 
