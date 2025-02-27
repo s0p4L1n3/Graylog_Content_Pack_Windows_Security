@@ -2,13 +2,21 @@
 
 I've uploaded for you my working GPOs based on French Orgz ANSSI and based on the book written by Andrei Miroshnikov - Windows Security Monitoring - Scenarios and Patterns
 
+Please follow this guide to know how to import my backuped GPOs: [Exporting and Importing Group Policy Object between domains](https://thomascheng.net/2018/07/11/exporting-and-importing-group-policy-object-between-domains/)
 # Logging GPO
+
+
 
 You can find the Windows Documentation, here: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/advanced-security-auditing-faq
 
-Il y a 3 GPOs concernant la journalisation, la première nous assurant que le service de journalisation est démarré et ne pouvant être arrêté.
-La deuxième et troisième est l'activation de la journalisation avancée. 
-Une GPO à destination des controleurs de domaine. Une GPO à destinations des ordinateurs/serveurs.
+There is 3 mains GPOs:
+
+- DC targeted
+- W2022 Servers targeted
+- W10/11 WKS targeted
+
+
+
 
 Je me suis basé en partie sur le guide de l'ANSSI mais aussi sur le livre Windows Security Monitoring - Scenarios and Patterns de Andrei Miroshnikov.
 
