@@ -1,5 +1,7 @@
 # Currently remodeling all the content pack !
 
+View my OLD README: https://github.com/s0p4L1n3/Graylog_Content_Pack_Windows_Security/blob/main/archives/OLD_README.md
+
 # Windows Security Content Pack for Graylog
 
 Tested with Winlogbeat & Filebeat 7.17.27 / Windows 2022 / Windows 11 / Graylog 6.1.5
